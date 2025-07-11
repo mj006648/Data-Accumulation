@@ -8,8 +8,6 @@
 
 이 프로젝트는 **Cloud-Native 환경에서 멀티모달 대용량 데이터를 실시간으로 수집, 분류, 품질 검증, 최적화하여 데이터레이크/레이크하우스에 축적**하는 파이프라인의 설계와 구현 사례를 다룹니다.
 
-- **Connected Data Lake → Federated Data Lakehouse**  
-  데이터 이동 성능은 Connected Data Lake에서, 다양한 목적·사용자에 대한 유연성은 Lakehouse에서 해결합니다.
 - **실시간성, 품질 보장, 메타데이터 중심 설계**  
   단순 적재가 아닌, 수집 단계 메타데이터와 WAP(Write-Audit-Publish) 패턴을 통한 고품질 데이터 축적이 핵심입니다.
 
@@ -19,7 +17,7 @@
 
 ### 1. 실시간 멀티모달 데이터 수집
 
-- **Kafka Stream 기반**  
+- **Kafka Producer**  
   IoT, 센서, 로그, 이미지, 텍스트 등 다양한 소스의 데이터를 실시간 ingest
 - **Topic별 분류**  
   데이터 특성에 따라 Kafka Topic을 분리, 각 Topic별로 테이블 관리
@@ -50,29 +48,16 @@
 ## 전체 아키텍처 흐름
 
 1. **데이터 소스**  
-   - IoT, 센서, 로그, 이미지, 텍스트 등
-2. **Kafka Producer (TwinX 등)**  
-   - 데이터 특성별 Topic 분리, 수집 레벨 메타데이터 포함
+   - IoT, 센서, 로그, 이미지, 텍스트 등 -> 타임시리즈 데이터
+2. **Kafka Producer (TwinX)**  
+   - 데이터 특성별 Topic 분리, 수집 레벨 메타데이터 태깅
 3. **Kafka Cluster**  
    - Topic별 스트림 관리
 4. **Spark Streaming + Nessie Catalog**  
    - 데이터 검증, WAP(Write-Audit-Publish), Multi Table Branch 관리, Merge
 5. **MinIO DataLake (Iceberg Table)**  
-   - Iceberg 테이블의 실제 데이터 파일(.parquet 등) 저장  
-   - Compaction, Snapshot, Orphan File 관리
-
----
-
-## 주요 구현 포인트
-
-- **수집 레벨 메타데이터 설계**  
-  Kafka 메시지 Header/Body에 별도 필드로 관리
-- **멀티모달 데이터 구조**  
-  Topic별 데이터 포맷/스키마 관리, Iceberg의 스키마 진화 활용
-- **WAP + Multi Table Branch**  
-  Nessie의 브랜치/머지 전략, 충돌 처리, 롤백 정책 설계
-- **Compaction/최적화 자동화**  
-  파일 크기, 병합 기준 등 성능 튜닝 파라미터 운영
+   - 실제 데이터 파일 저장 후 Iceberg 테이블로 관리
+   - 지속적인 Compaction, Metadata 및 Orphan File 최적화 
 
 ---
 
@@ -99,7 +84,7 @@
 ## 활용/확장 예시
 
 - **HPC, HPDA, AI 등 다양한 워크로드의 데이터 축적/활용**
-- **Connected Data Lake → Federated Data Lakehouse**로 진화하는 데이터 아키텍처 설계
+- **Connected Data Lake → Federated Data Lakehouse**로 진화하는 데이터 아키텍처 지원
 - **실시간 데이터 품질 관리, 멀티모달 대용량 데이터 운영**에 관심 있는 모든 실무자/연구자에게 추천
 
 > **문의/기여**  
