@@ -65,9 +65,9 @@
 
 | 영역         | 주요 스택/도구                                   | 설명                                                        |
 |--------------|--------------------------------------------------|-------------------------------------------------------------|
-| 메시징/수집  | Apache Kafka, Kafka Connect                      | Topic별 분리, 실시간성, 메타데이터 관리                     |
+| 메시징/수집  | Apache Kafka, Kafka Producer                    | Topic별 분리, 실시간성, 메타데이터 관리                     |
 | 데이터레이크  | MinIO, Apache Iceberg, Nessie Catalog            | S3 호환 오브젝트 스토리지, 스키마 진화, 브랜치 기반 트랜잭션 |
-| 컴퓨팅/ETL   | Apache Spark, Airflow                            | 실시간 스트리밍 처리, 파이프라인 오케스트레이션             |
+| 컴퓨팅/ETL   | Apache Spark                           | 실시간 스트리밍 처리             |
 | 최적화       | Iceberg Compaction, Snapshot, Orphan File Clean  | 파일 병합, 스냅샷 관리, 고아 파일 정리                      |
 
 ---
